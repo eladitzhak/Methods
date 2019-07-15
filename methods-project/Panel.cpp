@@ -56,6 +56,7 @@ void Panel::nextInstance()
 }
 
 void Panel::focus() {
+    draw();
     if(children.size() > 0)
         nextInstance();
 }
