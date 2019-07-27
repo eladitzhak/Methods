@@ -7,6 +7,7 @@ class Panel : public Controller {
         Panel(Point position, int width, int height, Color font = white, Color backgroundColor = black, Border border = OneLine);
         void add(Controller&);
         Controller* getChild(int);
+        int size();
         void draw();
         void focus();
         void nextInstance();

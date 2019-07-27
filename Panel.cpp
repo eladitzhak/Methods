@@ -14,7 +14,7 @@ void Panel::add(Controller& controller)
 Controller* Panel::getChild(int index) 
 {
     if(index >= 0 && index < children.size())
-        return children[0];
+        return children[index];
     return NULL;
 }
 
@@ -72,7 +72,11 @@ void Panel::nextInstance()
 }
 
 void Panel::focus() {
-    draw();
+    currChild = -1;
     if(children.size() > 0)
         nextInstance();
+}
+
+int Panel::size(){
+    return children.size();
 }

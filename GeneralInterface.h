@@ -18,6 +18,7 @@ class GeneralInterface {
     private:
         GeneralInterface() {};
         GeneralInterface(GeneralInterface const&);
+        void CheckCoordinatesInPanel(Panel*, MOUSE_EVENT_RECORD&);
         void operator=(GeneralInterface const&);
         std::vector<Panel*> panels;
         Controller* focus;

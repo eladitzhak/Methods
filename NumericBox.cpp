@@ -1,21 +1,17 @@
 #include "NumericBox.h"
 
 NumericBox::NumericBox(const Controller& controller, int min, int max) 
-: Controller(controller), minValue(min), maxValue(max), currentValue(min), 
-decrement(Button(Label(Controller({position.x,position.y},3,1), " - "))),
-increment(Button(Label(Controller({position.x+9,position.y},3,1)," + ")))
+: Controller(controller), minValue(min), maxValue(max), currentValue(min),
+decrement(Button(Label(Controller({position.x+border,position.y+border},3,1), " - "))),
+increment(Button(Label(Controller({position.x+width-border-3-1,position.y+border},3,1)," + ")))
 {
-    // Controller* c = this;
-    // int totalPositionX = position.x + borderOffset, totalPositionY = position.y + borderOffset;
-    // while(c->getParent() != NULL) {
-    //     totalPositionX += c->getParent()->getPosition().x;
-    //     totalPositionY += c->getParent()->getPosition().y;
-    //     c = c->getParent();   
-    // }
-    // decrement.setPosition({totalPositionX, totalPositionY});
-    // increment.setPosition({totalPositionX + 9, totalPositionY});
-    Controller::setHeight(3);
-    Controller::setWidth(15);
+
+}
+
+void NumericBox::setParent(Controller* controller) {
+    Controller::setParent(controller);
+    decrement.setParent(controller);
+    increment.setParent(controller);
 }
 
 void NumericBox::plusResponse() {
@@ -38,7 +34,22 @@ int NumericBox::getValue() {
     return currentValue;
 }
 
-void NumericBox::handleMouseInput(MOUSE_EVENT_RECORD& event) {}
+void NumericBox::handleMouseInput(MOUSE_EVENT_RECORD& event) {
+    if(event.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED) {
+        bool pressInsideXdecrement = event.dwMousePosition.X >= position.x + borderOffset && event.dwMousePosition.X <= position.x + borderOffset + 3;
+        bool pressInsideXincrement = event.dwMousePosition.X >= position.x + borderOffset + width - 5  && event.dwMousePosition.X <= position.x + borderOffset + width - 2;
+        bool pressInsideY = event.dwMousePosition.Y >= position.y + borderOffset && event.dwMousePosition.Y <= position.y + borderOffset + 1; 
+        bool pressInsideDecrement = pressInsideXdecrement && pressInsideY; 
+        bool pressInsideIncrement= pressInsideXincrement && pressInsideY; 
+
+        if(pressInsideDecrement)
+            minusResponse();
+        if(pressInsideIncrement)
+            plusResponse();
+
+        draw();
+    }
+}
 
 void NumericBox::draw() {
     Controller::draw();

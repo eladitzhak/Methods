@@ -31,7 +31,7 @@ int main(int argc, char const *argv[])
     TextBox textBox(Controller({10,20}, 15, 1, white, black, OneLine), 4);
     textBox.setText("Amen yaavod");
 
-    NumericBox numericBox(Controller({5,9}, 0, 0), 1, 10);
+    NumericBox numericBox(Controller({5,9}, 15, 3), 1, 10);
 
     ComboBox comboBox(Controller({10,24}, 15, 1), options);
 

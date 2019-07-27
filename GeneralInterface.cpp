@@ -1,4 +1,5 @@
 #include "GeneralInterface.h"
+#include "Button.h"
 
 void GeneralInterface::addPanel(Panel& panel) 
 {
@@ -32,7 +33,8 @@ void GeneralInterface::startInput()
                 focus->handleKeyboardInput(ir.Event.KeyEvent);
             }
             else if (ir.EventType == MOUSE_EVENT) {
-                focus->handleMouseInput(ir.Event.MouseEvent);
+                for(auto panel : panels)
+                    CheckCoordinatesInPanel(panel, ir.Event.MouseEvent);
             }
         }
     }
@@ -59,5 +61,17 @@ void GeneralInterface::draw()
     for(auto panel : panels) 
     {
         panel->draw();
+    }
+}
+
+void GeneralInterface::CheckCoordinatesInPanel(Panel* panel, MOUSE_EVENT_RECORD& event) {
+    Controller* child;
+    for(int i  = 0; i < panel->size(); i++) {
+        child = panel->getChild(i);
+        if(dynamic_cast<Panel*>(child)){
+            CheckCoordinatesInPanel(dynamic_cast<Panel*>(child), event);
+        }
+        else
+            child->handleMouseInput(event);
     }
 }

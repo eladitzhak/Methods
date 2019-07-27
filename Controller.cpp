@@ -10,10 +10,6 @@ void Controller::setHidden(bool hidden)
 }
 
 Point Controller::getPosition() {
-    if(this->parent != NULL) {
-        Point parentPoint = this->parent->getPosition();
-        return {position.x + parentPoint.x, position.y + parentPoint.y}; 
-    }
     return position;
 }
 
@@ -28,7 +24,7 @@ void Controller::handleKeyboardInput(KEY_EVENT_RECORD& event) {
 }
 
 void Controller::handleMouseInput(MOUSE_EVENT_RECORD& event) {
-    parent->handleMouseInput(event);
+    
 }
 
 void Controller::nextInstance() 
@@ -38,9 +34,12 @@ void Controller::nextInstance()
 
 void Controller::setParent(Controller* controller) 
 {
+    if(parent == NULL)
+        position = {controller->position.x + position.x, controller->position.y + position.y };
+    else 
+        position = {controller->position.x + position.x - parent->position.x, controller->position.y + position.y  - parent->position.y};
+
     parent = controller;
-    Point offset = getRelativeOffset();
-    position = {position.x + offset.x, position.y + offset.y};
 }
 
 Controller* Controller::getParent() {
@@ -167,15 +166,5 @@ void Controller::drawTwoLinesBorder() {
     std::cout << (char) 0xd9;
 }
 
-Point Controller::getRelativeOffset()
-{
-    if(parent == NULL)
-        return {0, 0};
-    else
-    {
-        Point offset = parent->getRelativeOffset();
-        return {parent->position.x + offset.x, parent->position.y + offset.y };
-    }
-}
-
 void Controller::focus() { }
+void Controller::add(Controller& controller) { }

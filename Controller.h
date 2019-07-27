@@ -1,7 +1,7 @@
 #pragma once
 #include <windows.h>
 
-enum Border { OneLine, None, TwoLines };
+enum Border { None, OneLine, TwoLines };
 enum Color { black, blue, green, aqua, red, purple, yellow, white, gray, lightBlue, lightGreen, lightAqua, lightRed, lightPurple, lightYellow, brightWhite };
 
 typedef struct _Point {
@@ -15,13 +15,13 @@ class Controller
         Controller(Point position, int width, int height, Color font = white, Color backgroundColor = black, Border border = OneLine);
         void setHidden(bool);
         Controller* getParent();
-        void setParent(Controller*);
         Point getPosition();
         void setPosition(Point);
         int getHeight() { return height; };
         int getWidth() { return width; };
         void setHeight(int h) { height = h; };
         void setWidth(int w) { width = w; };
+        virtual void setParent(Controller*);
         virtual void nextInstance();
         virtual void add(Controller&);
         virtual Controller* getChild(int); 
@@ -44,5 +44,4 @@ class Controller
     private:
         void drawOneLineBorder();
         void drawTwoLinesBorder();
-        Point getRelativeOffset();
 };

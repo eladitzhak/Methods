@@ -17,6 +17,7 @@ class NumericBox : public Controller {
         void setValue(int);
         int getValue();
         void handleMouseInput(MOUSE_EVENT_RECORD&);
+        void setParent(Controller*);
         void draw();
         void focus();
 };

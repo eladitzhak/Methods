@@ -81,20 +81,21 @@ void RadioBox::handleMouseInput(MOUSE_EVENT_RECORD& event)
     // Check if position.x button is pressed and mouse is inside radiobox border
     if(event.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
     {
-        if(event.dwMousePosition.X >= position.x + borderOffset && event.dwMousePosition.X <= position.x + width)
+        if (event.dwMousePosition.X >= position.x + borderOffset && event.dwMousePosition.X <= position.x + width
+            && event.dwMousePosition.Y >= position.y + borderOffset && event.dwMousePosition.Y <= position.y + borderOffset + options.size() - 1)
         {
-            if(event.dwMousePosition.Y >= position.y + borderOffset && event.dwMousePosition.Y <= position.y + borderOffset + options.size() - 1)
-            {
-                // Set select to index of option that was clicked and redraw
-                if(select != event.dwMousePosition.Y - (position.y + borderOffset))
-                    select = event.dwMousePosition.Y - (position.y + borderOffset);
-                else
-                    ClearSelection();
-                
-                index = event.dwMousePosition.Y - (position.y + borderOffset);
-                draw();
-            }
+            // Set select to index of option that was clicked and redraw
+            if(select != event.dwMousePosition.Y - (position.y + borderOffset))
+                select = event.dwMousePosition.Y - (position.y + borderOffset);
+            else
+                ClearSelection();
+            
+            index = event.dwMousePosition.Y - (position.y + borderOffset);
         }
+        else {
+            index = -1;
+        }
+        draw();
     }
 }
 

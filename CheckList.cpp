@@ -2,7 +2,9 @@
 
 CheckList::CheckList(const Controller& controller, std::vector<std::string> list)
 : Controller(controller), allValues(list), currentValueIndex(-1)
-{}
+{ 
+    setHidden(true);
+}
 
 void CheckList::setSelectedValues(std::vector<std::string> newList) {
     selectedValues = newList;
@@ -40,9 +42,14 @@ void CheckList::handleKeyboardInput(KEY_EVENT_RECORD& event) {
     WORD pressedKey = event.wVirtualKeyCode;
 
     if (pressedKey == VK_TAB) {
-        currentValueIndex = -1;
-        nextInstance();
-        return;    
+        if(currentValueIndex == allValues.size() - 1)
+        {
+            currentValueIndex = -1;
+            nextInstance();
+        }
+        else
+            currentValueIndex++;
+        draw();
     }
 
     bool upKeyWasPressed = pressedKey == VK_UP || pressedKey == VK_NUMPAD8;
@@ -67,7 +74,7 @@ void CheckList::handleKeyboardInput(KEY_EVENT_RECORD& event) {
 void CheckList::handleMouseInput(MOUSE_EVENT_RECORD& event) {
     if(event.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED) {
         bool pressInsideX = event.dwMousePosition.X >= position.x + borderOffset && event.dwMousePosition.X <= position.x + borderOffset + width;
-        bool pressInsideY = event.dwMousePosition.Y >= position.y + borderOffset && event.dwMousePosition.Y <= position.y + borderOffset + height; 
+        bool pressInsideY = event.dwMousePosition.Y >= position.y + borderOffset && event.dwMousePosition.Y <= position.y + borderOffset + allValues.size() - 1; 
         bool pressInsideBox = pressInsideX && pressInsideY; 
 
         if(pressInsideBox) {
