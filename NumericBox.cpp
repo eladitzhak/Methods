@@ -4,9 +4,7 @@ NumericBox::NumericBox(const Controller& controller, int min, int max)
 : Controller(controller), minValue(min), maxValue(max), currentValue(min),
 decrement(Button(Label(Controller({position.x+border,position.y+border},3,1), " - "))),
 increment(Button(Label(Controller({position.x+width-border-3-1,position.y+border},3,1)," + ")))
-{
-
-}
+{}
 
 void NumericBox::setParent(Controller* controller) {
     Controller::setParent(controller);
@@ -53,7 +51,7 @@ void NumericBox::handleMouseInput(MOUSE_EVENT_RECORD& event) {
 
 void NumericBox::draw() {
     Controller::draw();
-    
+        
     decrement.draw();
 
     COORD coord = { SHORT(position.x + borderOffset + 5), SHORT(position.y + borderOffset + 1) };

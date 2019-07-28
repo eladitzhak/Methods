@@ -38,9 +38,13 @@ void TextBox::handleKeyboardInput(KEY_EVENT_RECORD& event) {
         setCursorPosition(newCursorPosition);
     } 
     
-    if(rightkeyPressed) { 
-        int newCursorPosition = currentPosition == maxLength - 1 ? currentPosition : currentPosition + 1;  
-        setCursorPosition(newCursorPosition);    
+    if(rightkeyPressed) {
+        if(currentPosition != maxLength - 1) {
+            currentPosition++;
+            if(currentPosition - 1 >= text.size()) {
+                text.insert(currentPosition - 1, " ");
+            }
+        }
     }
     
     if(deleteKeyPressed) {
