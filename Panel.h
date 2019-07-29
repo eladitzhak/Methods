@@ -13,6 +13,7 @@ class Panel : public Controller {
         void nextInstance();
         void handleKeyboardInput(KEY_EVENT_RECORD&);
         void handleMouseInput(MOUSE_EVENT_RECORD&);
+        void setCurrent(Controller *);
 
     private:
         std::vector<Controller*> children;

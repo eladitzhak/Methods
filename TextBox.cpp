@@ -1,21 +1,21 @@
 #include "TextBox.h"
 #include <iostream>
 
-TextBox::TextBox(const Controller& controller, int maximalSize)
+TextBox::TextBox(const Controller& controller)
 : Controller(controller) { 
     currentPosition = -1; 
     setHeight(1);
-    setWidth(maxLength = maximalSize);
+    setWidth(maxLength = controller.getWidth());
 }
 
-void TextBox::setText(string input) {
+void TextBox::setText(std::string input) {
     for(int i = 0; i < input.size() && i < maxLength; ++i) {
         text.push_back(input[i]);
     }
     draw();
 }
 
-string TextBox::getText() {
+std::string TextBox::getText() {
     return text;
 }
 
@@ -52,13 +52,14 @@ void TextBox::handleKeyboardInput(KEY_EVENT_RECORD& event) {
     }
     
     if(backspaceKeyPressed) { 
-        text.erase(currentPosition, 1);
+        if(currentPosition > 0)
+            text.erase(currentPosition-1, 1);
         int newCursorPosition = currentPosition == 0 ? currentPosition : currentPosition - 1;  
         setCursorPosition(newCursorPosition);
      }
     
     if(numberKeyPressed || letterKeyPressed) {
-        text.insert(currentPosition, string(1, (char)pressedKey));
+        text.insert(currentPosition, std::string(1, (char)pressedKey));
         if(text.size() > maxLength) {
             text.pop_back();
         }
@@ -68,22 +69,25 @@ void TextBox::handleKeyboardInput(KEY_EVENT_RECORD& event) {
 
      if(tabKeyPressed) {
         currentPosition = -1; 
+        draw();
         Controller::nextInstance();
+     } else {
+         draw();
      }
-
-     draw();
 }
 
 void TextBox::handleMouseInput(MOUSE_EVENT_RECORD& event) {
+    Controller::handleMouseInput(event);
     if(event.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED) {
         bool pressInsideX = event.dwMousePosition.X >= position.x + borderOffset && event.dwMousePosition.X <= position.x + borderOffset + width; 
         bool pressInsideY = event.dwMousePosition.Y >= position.y + borderOffset && event.dwMousePosition.Y <= position.y + borderOffset + height; 
-        bool pressInsideTextBox = pressInsideX && pressInsideY; 
+        bool pressInsideTextBox = pressInsideX && pressInsideY;
+        int clickPosition = event.dwMousePosition.X - position.x - borderOffset;
 
-        if(pressInsideTextBox) {
-            currentPosition = event.dwMousePosition.X - position.x - borderOffset;
+        if(pressInsideTextBox && clickPosition < text.size()) {
+            currentPosition = clickPosition;
         } else {
-            currentPosition = text.size() - 1;
+            currentPosition = text.size();
         }
         draw();
     }
@@ -111,8 +115,10 @@ void TextBox::draw() {
         if(i==currentPosition) {
             SetConsoleTextAttribute(handle, (font^0xF | ((backgroundColor^0xF) << 4)));
         }
-        cout << text[i];
+        std::cout << text[i];
     }
+
+    SetConsoleCursorPosition(handle, { SHORT(position.x + borderOffset + currentPosition), SHORT(position.y + borderOffset) } );
 }
 
 void TextBox::focus(){

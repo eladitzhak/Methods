@@ -4,15 +4,13 @@
 #include <string>
 #include <windows.h>
 
-using namespace std;
-
 class Label : public Controller {
     protected:
-        string text;
+        std::string text;
     public:
-        Label(const Controller& controller, string _text);
-        string getText();
-        void setText(string newText);
+        Label(const Controller& controller, std::string _text);
+        std::string getText();
+        void setText(std::string newText);
         void draw();
         void focus();
 };

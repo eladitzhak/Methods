@@ -1,4 +1,5 @@
 #include "Controller.h"
+#include "GeneralInterface.h"
 #include <iostream>
 
 Controller::Controller(Point position, int width, int height, Color font, Color backgroundColor, Border border) : 
@@ -9,7 +10,7 @@ void Controller::setHidden(bool hidden)
     isHidden = hidden;
 }
 
-Point Controller::getPosition() {
+Point Controller::getPosition() const {
     return position;
 }
 
@@ -24,7 +25,22 @@ void Controller::handleKeyboardInput(KEY_EVENT_RECORD& event) {
 }
 
 void Controller::handleMouseInput(MOUSE_EVENT_RECORD& event) {
-    
+    if(event.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
+    {
+        if (event.dwMousePosition.X >= position.x + borderOffset && event.dwMousePosition.X <= position.x + width
+            && event.dwMousePosition.Y >= position.y + borderOffset && event.dwMousePosition.Y <= position.y + borderOffset + height)
+        {
+            if(GeneralInterface::getInstance().getFocus() != this)
+            {
+                GeneralInterface::getInstance().setFocus(this);
+                Panel* parentPanel = dynamic_cast<Panel*>(parent);
+                if(parentPanel)
+                    parentPanel->setCurrent(this);
+            }
+                
+        }
+        draw();
+    }
 }
 
 void Controller::nextInstance() 
@@ -35,14 +51,14 @@ void Controller::nextInstance()
 void Controller::setParent(Controller* controller) 
 {
     if(parent == NULL)
-        position = {controller->position.x + position.x, controller->position.y + position.y };
+        position = {SHORT(controller->position.x + position.x), SHORT(controller->position.y + position.y) };
     else 
-        position = {controller->position.x + position.x - parent->position.x, controller->position.y + position.y  - parent->position.y};
+        position = {SHORT(controller->position.x + position.x - parent->position.x), SHORT(controller->position.y + position.y  - parent->position.y)};
 
     parent = controller;
 }
 
-Controller* Controller::getParent() {
+Controller* Controller::getParent() const {
     return parent;
 }
 

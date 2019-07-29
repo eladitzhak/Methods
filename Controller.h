@@ -14,11 +14,11 @@ class Controller
     public:
         Controller(Point position, int width, int height, Color font = white, Color backgroundColor = black, Border border = OneLine);
         void setHidden(bool);
-        Controller* getParent();
-        Point getPosition();
+        Controller* getParent() const;
+        Point getPosition() const;
         void setPosition(Point);
-        int getHeight() { return height; };
-        int getWidth() { return width; };
+        int getHeight() const { return height; };
+        int getWidth() const { return width; };
         void setHeight(int h) { height = h; };
         void setWidth(int w) { width = w; };
         virtual void setParent(Controller*);

@@ -1,10 +1,10 @@
 #include "ComboBox.h"
 
-using namespace std; 
-
-ComboBox::ComboBox(const Controller& controller, vector<string> list) 
+ComboBox::ComboBox(const Controller& controller, std::vector<std::string> list) 
 : Controller(controller), valuesList(list), selected(-1), current(-1), isListHidden(true)
-{ } 
+{ 
+    setHidden(true);
+} 
 
 int ComboBox::getSelectedIndex() {
     return selected;
@@ -14,7 +14,7 @@ void ComboBox::setSelectedIndex(int newSelection) {
     selected = newSelection;
 }
 
-string ComboBox::getContent() {
+std::string ComboBox::getContent() {
     int index = selected;
     if(index < 0 || index >= valuesList.size()) {
         return "";
@@ -42,8 +42,9 @@ void ComboBox::handleKeyboardInput(KEY_EVENT_RECORD& event) {
 
         if (pressedKey == VK_TAB) {
             current = -1;
-            nextInstance();
+            hideList();
             draw();
+            nextInstance();
         }
 
         bool upKeyWasPressed = pressedKey == VK_UP || pressedKey == VK_NUMPAD8;
@@ -60,6 +61,7 @@ void ComboBox::handleKeyboardInput(KEY_EVENT_RECORD& event) {
 
         if(selectKeyPressed) {
             selected = current;
+            hideList();
         }
 
         draw();
@@ -69,14 +71,17 @@ void ComboBox::handleKeyboardInput(KEY_EVENT_RECORD& event) {
 void ComboBox::handleMouseInput(MOUSE_EVENT_RECORD& event) {
     if(event.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED) {
         if(isListHidden == true) {
+            
             bool pressInsideX = event.dwMousePosition.X >= position.x + borderOffset && event.dwMousePosition.X <= position.x + borderOffset + width;
             bool pressInsideY = event.dwMousePosition.Y >= position.y + borderOffset && event.dwMousePosition.Y <= position.y + borderOffset + 1; 
             bool pressInsideBox = pressInsideX && pressInsideY; 
 
             if(pressInsideBox) {
                 showList();
+                draw();
             }
         } else {
+            
             bool pressInsideX = event.dwMousePosition.X >= position.x + borderOffset && event.dwMousePosition.X <= position.x + borderOffset + width;
             bool pressInsideY = event.dwMousePosition.Y > position.y + borderOffset && event.dwMousePosition.Y <= position.y + borderOffset + valuesList.size(); 
             bool pressInsideBox = pressInsideX && pressInsideY;
@@ -85,10 +90,13 @@ void ComboBox::handleMouseInput(MOUSE_EVENT_RECORD& event) {
                 selected = event.dwMousePosition.Y - position.y - borderOffset - 1;
                 current = 0;
                 hideList();
+            } else {
+                hideList();
             }
+            draw();
         }
-        draw();
     }
+    Controller::handleMouseInput(event);
 }
 
 void ComboBox::draw() {
@@ -103,32 +111,32 @@ void ComboBox::draw() {
     
     for(int i=0; i<width; ++i) {
         if(i < getContent().size() && isListHidden) {
-            cout << getContent()[i];
+            std::cout << getContent()[i];
         } else if(i != width - 1) {
-            cout << " ";
+            std::cout << " ";
         } else {
-            cout <<  (isListHidden ? "v" : "^");
+            std::cout <<  (isListHidden ? "v" : "^");
         }
     }
 
     for(int i = 0; i < valuesList.size(); i++) {
         SetConsoleTextAttribute(handle, (font | backgroundColor << 4));
         if(isListHidden) {
-            SetConsoleCursorPosition(handle, {coord.X - 1, coord.Y + i + 2});
+            SetConsoleCursorPosition(handle, {SHORT(coord.X - 1), SHORT(coord.Y + i + 2)});
             for(int i=0; i<=width+borderOffset*2; ++i) {
-                cout << " ";
+                std::cout << " ";
             }
         } else {
             if(i==current) {
                 SetConsoleTextAttribute(handle, (font^0xF | ((backgroundColor^0xF) << 4)));
             }
-            SetConsoleCursorPosition(handle, {coord.X, coord.Y + i + 1});
-            cout << valuesList[i];
+            SetConsoleCursorPosition(handle, {coord.X, SHORT(coord.Y + i + 1)});
+            std::cout << (std::string)valuesList[i];
         }
-
     }
 }
 
 void ComboBox::focus(){
-    nextInstance();
+    if(isListHidden)
+        nextInstance();
 }

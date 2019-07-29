@@ -13,6 +13,7 @@ class GeneralInterface {
         void startInput();
         void setFocus();
         void setFocus(Controller*);
+        Controller* getFocus() { return focus; };
         void draw();
 
     private:

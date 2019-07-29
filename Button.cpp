@@ -1,6 +1,6 @@
 #include "Button.h"
 
-Button::Button(const Label& label) : Label(label) {}
+Button::Button(const Label& label) : Label(label), action(NULL) {}
 
 void Button::handleMouseInput(MOUSE_EVENT_RECORD& event) {
     bool firstCondition = event.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED;
@@ -16,5 +16,10 @@ void Button::handleMouseInput(MOUSE_EVENT_RECORD& event) {
 }
 
 void Button::doSomething() {
-    Label::setText("Text was changed");
+    if(action != NULL)
+        action();
+}
+
+void Button::setText(std::string text){
+    Label::setText(text);
 }

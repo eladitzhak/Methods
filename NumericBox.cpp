@@ -2,8 +2,8 @@
 
 NumericBox::NumericBox(const Controller& controller, int min, int max) 
 : Controller(controller), minValue(min), maxValue(max), currentValue(min),
-decrement(Button(Label(Controller({position.x+border,position.y+border},3,1), " - "))),
-increment(Button(Label(Controller({position.x+width-border-3-1,position.y+border},3,1)," + ")))
+decrement(Button(Label(Controller({SHORT(position.x+border),SHORT(position.y+border)},3,1), " - "))),
+increment(Button(Label(Controller({SHORT(position.x+width-border-3-1),SHORT(position.y+border)},3,1)," + ")))
 {}
 
 void NumericBox::setParent(Controller* controller) {
@@ -60,7 +60,7 @@ void NumericBox::draw() {
     GetConsoleScreenBufferInfo(handle, &info);
     SetConsoleCursorPosition(handle, coord);
     SetConsoleTextAttribute(handle, font | (backgroundColor << 4));
-    cout << currentValue;
+    std::cout << currentValue;
     
     increment.draw();
 }

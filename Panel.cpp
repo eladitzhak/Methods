@@ -34,22 +34,7 @@ void Panel::handleKeyboardInput(KEY_EVENT_RECORD& event)
 
 void Panel::handleMouseInput(MOUSE_EVENT_RECORD& event) 
 {
-    if(event.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED) {
-        for(int i=0; i<children.size(); ++i) {
-            Controller* child = children[i];
 
-            bool condition1 = event.dwMousePosition.X >= child->getPosition().x;
-            bool condition2 = event.dwMousePosition.X <= child->getPosition().x + child->getWidth();
-            bool condition3 = event.dwMousePosition.Y >= child->getPosition().y;
-            bool condition4 = event.dwMousePosition.Y <= child->getPosition().y + child->getHeight();
-            
-            if(condition1 && condition2 && condition3 && condition4) {
-                currChild = i;
-                GeneralInterface::getInstance().setFocus(child);
-                child->focus();
-            }
-        }
-    }
 }
 
 void Panel::nextInstance() 
@@ -71,12 +56,27 @@ void Panel::nextInstance()
     }
 }
 
-void Panel::focus() {
+void Panel::focus() 
+{
     currChild = -1;
     if(children.size() > 0)
         nextInstance();
 }
 
-int Panel::size(){
+int Panel::size()
+{
     return children.size();
+}
+
+void Panel::setCurrent(Controller* controller) 
+{
+    for(int i=0; i<children.size(); ++i) {
+        if(children[i] == controller) 
+        {
+            currChild = i;
+            Panel* parentPanel = dynamic_cast<Panel*>(parent);
+            if(parentPanel)
+                parentPanel->setCurrent(this);
+        }
+    }
 }

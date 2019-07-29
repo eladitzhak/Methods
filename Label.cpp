@@ -1,15 +1,15 @@
 #include "Label.h"
 
-Label::Label(const Controller& controller, string _text)
+Label::Label(const Controller& controller, std::string _text)
 : Controller(controller), text(_text) {
     setHidden(true);
 }
 
-string Label::getText() {
+std::string Label::getText() {
     return text;
 }
 
-void Label::setText(string newText) {
+void Label::setText(std::string newText) {
     text = newText;
 }
 
@@ -23,7 +23,7 @@ void Label::draw() {
     COORD oldCoord = info.dwCursorPosition;
     SetConsoleCursorPosition(handle, coord);
     SetConsoleTextAttribute(handle, font | (backgroundColor << 4));
-    cout << text;
+    std::cout << text;
 }
 
 void Label::focus() {

@@ -32,20 +32,20 @@ void RadioBox::handleKeyboardInput(KEY_EVENT_RECORD& event)
 
     if (!event.bKeyDown) return;
 
-    // If tab is pressed then go to next controller or move selection
     if (event.wVirtualKeyCode == VK_TAB)
     {
         if(index == options.size() - 1)
         {
             index = -1;
+            draw();
             nextInstance();
         }
-        else
+        else {
             index++;
-        draw();
+            draw();
+        }
     }
 
-    // If space or enter is pressed then select current option
     if (event.wVirtualKeyCode == VK_SPACE || event.wVirtualKeyCode == VK_RETURN)
     {
         if(select != index)
@@ -55,7 +55,6 @@ void RadioBox::handleKeyboardInput(KEY_EVENT_RECORD& event)
         draw();
     }
 
-    // If arrow keys pressed, move selection
     if (event.wVirtualKeyCode == VK_UP || event.wVirtualKeyCode == VK_DOWN || event.wVirtualKeyCode == VK_NUMPAD8 || event.wVirtualKeyCode == VK_NUMPAD2)
     {
         CONSOLE_SCREEN_BUFFER_INFO info;
@@ -78,13 +77,13 @@ void RadioBox::handleKeyboardInput(KEY_EVENT_RECORD& event)
 
 void RadioBox::handleMouseInput(MOUSE_EVENT_RECORD& event)
 {
-    // Check if position.x button is pressed and mouse is inside radiobox border
+    Controller::handleMouseInput(event);
+
     if(event.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
     {
         if (event.dwMousePosition.X >= position.x + borderOffset && event.dwMousePosition.X <= position.x + width
             && event.dwMousePosition.Y >= position.y + borderOffset && event.dwMousePosition.Y <= position.y + borderOffset + options.size() - 1)
         {
-            // Set select to index of option that was clicked and redraw
             if(select != event.dwMousePosition.Y - (position.y + borderOffset))
                 select = event.dwMousePosition.Y - (position.y + borderOffset);
             else
@@ -110,7 +109,6 @@ void RadioBox::draw()
     SetConsoleCursorPosition(handle, coord);
     SetConsoleTextAttribute(handle, font | (backgroundColor << 4));
 
-    // Print option strings
     int i = 0;
     for (std::vector<std::string>::iterator it = options.begin(); it != options.end(); it++){
         SetConsoleCursorPosition(handle, {coord.X, SHORT(coord.Y+i)});

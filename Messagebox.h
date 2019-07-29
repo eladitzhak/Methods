@@ -4,16 +4,17 @@
 #include <WinUser.h>
 #include <string>
 
-enum Answer { Cancel, Ok };
+enum Answer { NoAnswer, Cancel, Ok };
 
 class Messagebox : public Controller {
     private:
         std::string message;
-        bool answer;
+        Answer answer;
     public:
-        Messagebox(const Controller& controller, std::string msg = "Are you sure?");
-        Answer showPopup(std::string);
-        Answer showPopup();
+        Messagebox(Point, int, int height, std::string msg, Color font = white, Color backgroundColor = black, Border border = OneLine);
+        void showPopup(std::string);
+        void showPopup();
+        Answer getAnswer();
         void handleKeyboardInput(KEY_EVENT_RECORD&);
         void handleMouseInput(MOUSE_EVENT_RECORD&);
         void focus();
