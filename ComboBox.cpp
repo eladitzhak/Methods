@@ -37,16 +37,15 @@ void ComboBox::handleKeyboardInput(KEY_EVENT_RECORD& event) {
     Controller::handleKeyboardInput(event);
     if (!event.bKeyDown) return;
 
+    WORD pressedKey = event.wVirtualKeyCode;
+    if (pressedKey == VK_TAB) {
+        current = -1;
+        hideList();
+        draw();
+        nextInstance();
+    }
+
     if(isListHidden == false) {
-        WORD pressedKey = event.wVirtualKeyCode;
-
-        if (pressedKey == VK_TAB) {
-            current = -1;
-            hideList();
-            draw();
-            nextInstance();
-        }
-
         bool upKeyWasPressed = pressedKey == VK_UP || pressedKey == VK_NUMPAD8;
         bool downKeyWasPressed = pressedKey == VK_DOWN || pressedKey == VK_NUMPAD2;
         bool selectKeyPressed = pressedKey == VK_RETURN || pressedKey == VK_SPACE;
