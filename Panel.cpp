@@ -28,14 +28,10 @@ void Panel::draw()
 }
 
 void Panel::handleKeyboardInput(KEY_EVENT_RECORD& event) 
-{
-
-}
+{}
 
 void Panel::handleMouseInput(MOUSE_EVENT_RECORD& event) 
-{
-
-}
+{}
 
 void Panel::nextInstance() 
 {
